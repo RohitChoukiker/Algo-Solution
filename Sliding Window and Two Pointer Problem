@@ -1,0 +1,46 @@
+// roblem Statement: Given a String, find the length of longest substring without any repeating character
+
+
+#include <iostream>
+#include <unordered_set>
+using namespace std;
+
+int lengthOfLongestSubstring(string s) {
+    // Use a set to store the characters in the current window (substring)
+    unordered_set<char> charSet;
+    
+    int left = 0;  // Left pointer of the sliding window
+    int maxLength = 0;  // Variable to store the length of the longest substring
+    
+    // Right pointer moves across the string
+    for (int right = 0; right < s.length(); ++right) {
+        // If the character is already in the set, we need to shrink the window from the left
+        while (charSet.find(s[right]) != charSet.end()) {
+            // Remove the leftmost character and move the left pointer
+            charSet.erase(s[left]);
+            left++;
+        }
+        
+        // Add the current character to the set and update the maximum length
+        charSet.insert(s[right]);
+        maxLength = max(maxLength, right - left + 1);
+    }
+    
+    return maxLength;
+}
+
+int main() {
+    // Example test cases
+    string s1 = "abcabcbb";
+    string s2 = "bbbbb";
+    string s3 = "pwwkew";
+    
+    cout << "Length of longest substring without repeating characters (abcabcbb): " 
+         << lengthOfLongestSubstring(s1) << endl;
+    cout << "Length of longest substring without repeating characters (bbbbb): " 
+         << lengthOfLongestSubstring(s2) << endl;
+    cout << "Length of longest substring without repeating characters (pwwkew): " 
+         << lengthOfLongestSubstring(s3) << endl;
+    
+    return 0;
+}
