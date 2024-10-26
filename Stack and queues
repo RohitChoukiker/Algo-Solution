@@ -1,1 +1,49 @@
 
+#include <iostream>
+#include <stack>
+using namespace std;
+
+void insertAtBottom(stack<int>& s, int x) {
+    // Base case: If the stack is empty, push the element
+    if (s.empty()) {
+        s.push(x);
+        return;
+    }
+
+    // Store the top element and remove it from stack
+    int topElement = s.top();
+    s.pop();
+
+    // Recursive call to reach the bottom
+    insertAtBottom(s, x);
+
+    // Push the stored element back on top
+    s.push(topElement);
+}
+
+void printStack(stack<int> s) {
+    while (!s.empty()) {
+        cout << s.top() << " ";
+        s.pop();
+    }
+    cout << endl;
+}
+
+int main() {
+    stack<int> s;
+    s.push(1);
+    s.push(2);
+    s.push(3);
+    s.push(4);
+
+    cout << "Original Stack: ";
+    printStack(s);
+
+    // Insert element at bottom
+    insertAtBottom(s, 0);
+
+    cout << "Stack after inserting 0 at bottom: ";
+    printStack(s);
+
+    return 0;
+}
