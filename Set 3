@@ -1,1 +1,73 @@
 Hello from Set3
+
+set 3 programs 
+#include <iostream>
+#include <vector>
+using namespace std;
+
+void printSpiralMatrix(const vector<vector<int>>& matrix) {
+    if (matrix.empty()) {
+        return;  // Empty matrix, nothing to print
+    }
+
+    int top = 0;
+    int bottom = matrix.size() - 1;
+    int left = 0;
+    int right = matrix[0].size() - 1;
+
+    cout << "Spiral order of the matrix:" << endl;
+    while (top <= bottom && left <= right) {
+        // Print top row
+        for (int i = left; i <= right; i++) {
+            cout << matrix[top][i] << " ";
+        }
+        top++;
+
+        // Print right column
+        for (int i = top; i <= bottom; i++) {
+            cout << matrix[i][right] << " ";
+        }
+        right--;
+
+        // Print bottom row (if any)
+        if (top <= bottom) {
+            for (int i = right; i >= left; i--) {
+                cout << matrix[bottom][i] << " ";
+            }
+            bottom--;
+        }
+
+        // Print left column (if any)
+        if (left <= right) {
+            for (int i = bottom; i >= top; i--) {
+                cout << matrix[i][left] << " ";
+            }
+            left++;
+        }
+    }
+    cout << endl;
+}
+
+int main() {
+    int rows, cols;
+    cout << "Enter the number of rows: ";
+    cin >> rows;
+    cout << "Enter the number of columns: ";
+    cin >> cols;
+
+    vector<vector<int>> matrix(rows, vector<int>(cols));
+
+    cout << "Enter elements for the matrix:" << endl;
+    for (int i = 0; i < rows; i++) {
+        for (int j = 0; j < cols; j++) {
+            cout << "Element at (" << i << ", " << j << "): ";
+            cin >> matrix[i][j];
+        }
+    }
+
+    // Print the matrix in spiral order
+    printSpiralMatrix(matrix);
+
+    return 0;
+}
+
