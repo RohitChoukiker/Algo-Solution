@@ -1,73 +1,149 @@
-Hello from Set3
 
-set 3 programs 
-#include <iostream>
-#include <vector>
-using namespace std;
+oid spiralMatrix(int rows, int cols) {
+    vector<vector<int>> matrix(rows, vector<int>(cols));
+    int value = 1, top = 0, bottom = rows - 1, left = 0, right = cols - 1;
 
-void printSpiralMatrix(const vector<vector<int>>& matrix) {
-    if (matrix.empty()) {
-        return;  // Empty matrix, nothing to print
-    }
-
-    int top = 0;
-    int bottom = matrix.size() - 1;
-    int left = 0;
-    int right = matrix[0].size() - 1;
-
-    cout << "Spiral order of the matrix:" << endl;
     while (top <= bottom && left <= right) {
-        // Print top row
-        for (int i = left; i <= right; i++) {
-            cout << matrix[top][i] << " ";
-        }
+        for (int i = left; i <= right; i++) matrix[top][i] = value++;
         top++;
-
-        // Print right column
-        for (int i = top; i <= bottom; i++) {
-            cout << matrix[i][right] << " ";
-        }
+        for (int i = top; i <= bottom; i++) matrix[i][right] = value++;
         right--;
-
-        // Print bottom row (if any)
         if (top <= bottom) {
-            for (int i = right; i >= left; i--) {
-                cout << matrix[bottom][i] << " ";
-            }
+            for (int i = right; i >= left; i--) matrix[bottom][i] = value++;
             bottom--;
         }
-
-        // Print left column (if any)
         if (left <= right) {
-            for (int i = bottom; i >= top; i--) {
-                cout << matrix[i][left] << " ";
-            }
+            for (int i = bottom; i >= top; i--) matrix[i][left] = value++;
             left++;
         }
     }
-    cout << endl;
+
+    for (int i = 0; i < rows; i++) {
+        for (int j = 0; j < cols; j++) cout << matrix[i][j] << "\t";
+        cout << endl;
+    }
 }
 
-int main() {
-    int rows, cols;
-    cout << "Enter the number of rows: ";
-    cin >> rows;
-    cout << "Enter the number of columns: ";
-    cin >> cols;
 
-    vector<vector<int>> matrix(rows, vector<int>(cols));
+bool isHappy(int n) {
+    unordered_set<int> seenNumbers; 
 
-    cout << "Enter elements for the matrix:" << endl;
-    for (int i = 0; i < rows; i++) {
-        for (int j = 0; j < cols; j++) {
-            cout << "Element at (" << i << ", " << j << "): ";
-            cin >> matrix[i][j];
+    while (n != 1 && seenNumbers.find(n) == seenNumbers.end()) {
+        seenNumbers.insert(n);
+        int sum = 0;
+        
+        while (n > 0) {
+            int digit = n % 10;
+            sum += digit * digit;
+            n /= 10;
+        }
+        
+        n = sum; // Update n to the calculated sum
+    }
+    
+    return n == 1; // If n is 1, it's a happy number
+}
+
+int minimumProduct(vector<int> arr, int k) {
+    sort(arr.begin(), arr.end());
+    int product = 1;
+    for (int i = 0; i < k; i++) {
+        product *= arr[i];
+    }
+    return product;
+}
+
+bool isValid(string s) {
+    stack<char> st;
+    for (char c : s) {
+        if (c == '(' || c == '{' || c == '[') {
+            st.push(c);
+        } else {
+            if (st.empty()) {
+                return false;
+            }
+            char top = st.top();
+            if ((c == ')' && top == '(') || 
+                (c == '}' && top == '{') || 
+                (c == ']' && top == '[')) {
+                st.pop();
+            } else {
+                return false;
+            }
+        }
+    }
+    return st.empty();
+}
+
+
+bool checkValidString(string s) {
+    int low = 0, high = 0;
+    for (char c : s) {
+        if (c == '(') {
+            low++;
+            high++;
+        } else if (c == ')') {
+            low--;
+            high--;
+        } else if (c == '*') {
+            low--;
+            high++;
+        }
+        if (high < 0) {
+            return false;  
+        }
+        if (low < 0) {
+            low = 0; 
+        }
+    }
+    return low == 0;
+}
+
+
+
+vector<int> maxSlidingWindow(vector<int>& arr, int K) {
+    deque<int> dq;
+    vector<int> result;
+
+    for (int i = 0; i < arr.size(); i++) {
+        if (!dq.empty() && dq.front() == i - K) {
+            dq.pop_front();
+        }
+
+        while (!dq.empty() && arr[dq.back()] <= arr[i]) {
+            dq.pop_back();
+        }
+
+        dq.push_back(i);
+
+        if (i >= K - 1) {
+            result.push_back(arr[dq.front()]);
         }
     }
 
-    // Print the matrix in spiral order
-    printSpiralMatrix(matrix);
-
-    return 0;
+    return result;
 }
 
+
+
+int findORofAllSubarrays(const vector<int>& arr) {
+    unordered_set<int> distinct_ors; 
+    
+
+    for (int i = 0; i < arr.size(); i++) {
+        int current_or = 0;
+   
+        for (int j = i; j < arr.size(); j++) {
+            current_or |= arr[j];  
+            distinct_ors.insert(current_or);  
+        }
+    }
+    
+
+    int result = 0;
+    for (int or_val : distinct_ors) {
+        result |= or_val;
+    }
+    
+    return result;
+}
